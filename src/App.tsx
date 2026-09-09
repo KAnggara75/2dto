@@ -49,6 +49,37 @@ export const App: React.FC = () => {
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
   const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
 
+  // System theme detection (read from user's system preferences)
+  const [isDark, setIsDark] = useState<boolean>(() => {
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    return true;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setIsDark(e.matches);
+    };
+
+    setIsDark(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Sync dark class on root document element
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDark) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDark]);
+
   // Debounce JSON changes by 250ms for smooth editing
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -146,7 +177,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen w-screen bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 overflow-hidden font-sans">
       <ConfigToolbar config={config} onChange={setConfig} />
       <EditorWorkspace
         rawJson={rawJson}
@@ -161,6 +192,7 @@ export const App: React.FC = () => {
         onDownload={handleDownload}
         copied={copied}
         hasOutput={Boolean(generatedCode || files.length > 0)}
+        isDark={isDark}
       />
     </div>
   );
