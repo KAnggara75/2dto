@@ -67,27 +67,46 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       ? files[activeFileIndex].code
       : generatedCode;
 
+  // Determine JSON status: empty (yellow), invalid (red), valid (green)
+  const isJsonEmpty = !rawJson.trim();
+  const isJsonInvalid = Boolean(errorFeedback);
+  const statusColorClass = isJsonEmpty
+    ? 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]'
+    : isJsonInvalid
+    ? 'bg-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]'
+    : 'bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]';
+
+  const statusLabel = isJsonEmpty
+    ? 'Empty'
+    : isJsonInvalid
+    ? 'Invalid JSON'
+    : 'Valid JSON';
+
   return (
     <div
       ref={containerRef}
-      className={`flex-1 flex flex-col md:flex-row h-[calc(100vh-105px)] overflow-hidden select-none ${
+      className={`flex-1 flex flex-col md:flex-row min-h-0 h-full overflow-hidden select-none ${
         isDragging ? 'cursor-col-resize select-none' : ''
       }`}
     >
       {/* Left Pane: JSON Input (Dynamic width up to 50%) */}
       <div
         style={{ width: `${leftWidthPercent}%` }}
-        className="flex flex-col h-full bg-slate-950 border-r border-slate-800 shrink-0"
+        className="flex flex-col h-full min-h-0 bg-slate-950 border-r border-slate-800 shrink-0 overflow-hidden"
       >
-        <div className="bg-slate-900/60 px-4 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
+        <div className="bg-slate-900/60 px-4 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span
+              className={`w-2 h-2 rounded-full transition-colors duration-200 ${statusColorClass}`}
+              title={`Status: ${statusLabel}`}
+            ></span>
             <span>Input JSON</span>
+            <span className="text-[10px] text-slate-500 font-sans">({statusLabel})</span>
           </div>
           <span className="text-[11px] text-slate-500">Auto-formats on paste</span>
         </div>
 
-        <div className="flex-1 relative">
+        <div className="flex-1 min-h-0 relative">
           <Editor
             height="100%"
             defaultLanguage="json"
@@ -111,7 +130,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         </div>
 
         {errorFeedback && (
-          <div className="bg-rose-950/80 border-t border-rose-800/60 p-2.5 px-4 text-xs text-rose-200 flex items-start gap-2 backdrop-blur">
+          <div className="bg-rose-950/80 border-t border-rose-800/60 p-2.5 px-4 text-xs text-rose-200 flex items-start gap-2 backdrop-blur shrink-0">
             <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
             <span className="font-mono break-all">{errorFeedback}</span>
           </div>
@@ -121,7 +140,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       {/* Draggable Divider Handle */}
       <div
         onMouseDown={handleMouseDown}
-        className={`hidden md:flex items-center justify-center w-2 -mx-1 z-20 cursor-col-resize group hover:bg-indigo-500/30 transition select-none ${
+        className={`hidden md:flex items-center justify-center w-2 -mx-1 z-20 cursor-col-resize group hover:bg-indigo-500/30 transition select-none shrink-0 ${
           isDragging ? 'bg-indigo-600' : 'bg-transparent'
         }`}
         title="Drag to resize editor (Max: 50% screen width)"
@@ -132,14 +151,14 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       </div>
 
       {/* Right Pane: Java DTO Output (Takes remaining space) */}
-      <div className="flex-1 flex flex-col h-full bg-slate-950 min-w-0">
-        <div className="bg-slate-900/60 px-4 py-1.5 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
+      <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-slate-950 overflow-hidden">
+        <div className="bg-slate-900/60 px-4 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0 min-h-[38px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
             <FileCode className="w-3.5 h-3.5 text-indigo-400" />
             <span>Generated Java DTO</span>
             {files.length > 1 && (
-              <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1">
+              <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1 font-sans">
                 <Files className="w-3 h-3" /> {files.length} Separate Files
               </span>
             )}
@@ -151,26 +170,26 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
 
         {/* Tab bar when multiple classes exist */}
         {files.length > 1 && (
-          <div className="flex items-center bg-slate-950 border-b border-slate-800/80 overflow-x-auto scrollbar-none px-2 py-1 gap-1">
+          <div className="flex items-center bg-slate-950 border-b border-slate-800/80 overflow-x-auto scrollbar-none px-2 py-1.5 gap-1.5 shrink-0 min-h-[36px]">
             {files.map((file, idx) => (
               <button
                 key={file.filename}
                 type="button"
                 onClick={() => onSelectFileIndex(idx)}
-                className={`px-3 py-1 text-xs font-mono rounded transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                className={`px-3 py-1 text-xs font-mono rounded transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 ${
                   activeFileIndex === idx
-                    ? 'bg-slate-800 text-indigo-300 font-semibold border border-indigo-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                    ? 'bg-slate-800 text-indigo-300 font-semibold border border-indigo-500/40 shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900 border border-transparent'
                 }`}
               >
-                <FileCode className="w-3 h-3" />
+                <FileCode className="w-3 h-3 text-indigo-400" />
                 {file.filename}
               </button>
             ))}
           </div>
         )}
 
-        <div className="flex-1 relative">
+        <div className="flex-1 min-h-0 relative">
           <Editor
             height="100%"
             defaultLanguage="java"
