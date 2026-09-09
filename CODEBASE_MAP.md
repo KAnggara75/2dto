@@ -32,11 +32,10 @@ Repository `2dto` adalah web application statis (SPA) berbasis React 19 + TypeSc
 ---
 
 ### `src/components`
-- **Responsibility**: Komponen antarmuka pengguna (UI) editor, navigasi bar, dan toolbar opsi.
+- **Responsibility**: Komponen antarmuka pengguna (UI) editor, toolbar opsi konfigurasi, dan area interaktif editor.
 - **Entry / Key Files**:
-  - [`src/components/Header.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/Header.tsx) — Top bar aplikasi: branding, load sample JSON, tombol copy-to-clipboard, tombol download `.java`, dan link GitHub.
-  - [`src/components/ConfigToolbar.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/ConfigToolbar.tsx) — Bar konfigurasi opsi: pilihan target DTO (Java Class vs Record), input nama class dan package, serta checklist `@JsonProperty`, ISO dates, Jakarta validation, dan Lombok.
-  - [`src/components/EditorWorkspace.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/EditorWorkspace.tsx) — Dual-pane Monaco editor (kiri: input JSON, kanan: output Java DTO read-only) dan pesan error parsing.
+  - [`src/components/ConfigToolbar.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/ConfigToolbar.tsx) — Bar navigasi & konfigurasi atas: tautan repositori GitHub di sisi paling kiri, pilihan target DTO (Java Class vs Record), input nama class dan package, serta checklist `@JsonProperty`, ISO dates, Jakarta validation, dan Lombok.
+  - [`src/components/EditorWorkspace.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/EditorWorkspace.tsx) — Dual-pane Monaco editor (kiri: input JSON dengan status indikator valid/empty/invalid dan draggable separator max 50%; kanan: output Java DTO dengan file tabs dan tombol aksi Load Sample, Copy Code, dan Download).
 - **Dependencies**: `@monaco-editor/react`, `lucide-react`, `tailwindcss`.
 - **Consumers**: [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx).
 
