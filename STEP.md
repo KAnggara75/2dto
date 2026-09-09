@@ -7,7 +7,7 @@ Panduan teknis langkah-demi-langkah untuk membangun single-page application (SPA
 ## 1. Project Directory Structure
 
 ```text
-json-to-dto-web/
+2dto/
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml            # GitHub Actions workflow untuk GitHub Pages
@@ -37,17 +37,16 @@ json-to-dto-web/
 
 ## 2. Inisialisasi & Setup Dependensi
 
-Eksekusi perintah berikut untuk membuat scaffolding proyek Vite dengan template TypeScript:
+Eksekusi perintah berikut untuk setup proyek Vite React TypeScript menggunakan Bun di root repository:
 
 ```bash
-npm create vite@latest json-to-dto-web -- --template react-ts
-cd json-to-dto-web
+bun create vite . --template react-ts
 
 # Install UI editor & utilities
-npm install @monaco-editor/react lucide-react clsx tailwindcss @tailwindcss/vite lossless-json
+bun add @monaco-editor/react lucide-react clsx tailwindcss @tailwindcss/vite lossless-json
 
 # Setup TypeScript types jika diperlukan
-npm install -D @types/node
+bun add -d @types/node
 ```
 
 > **Catatan Teknis Dependensi:** Library `lossless-json` digunakan menggantikan `JSON.parse` native untuk mencegah bug pemotongan angka integer 64-bit (`Long` / `BigInteger` yang melampaui $2^{53} - 1$) ke float standar JavaScript.
@@ -163,11 +162,11 @@ Atur base path agar asset path relative sesuai sub-path GitHub Pages repository:
 ```typescript
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  plugins: [react()],
-  // Sesuaikan dengan nama repo GitHub Anda: https://<username>.github.io/<repo-name>/
-  base: process.env.NODE_ENV === 'production' ? '/<nama-repo-anda>/' : '/',
+  plugins: [react(), tailwindcss()],
+  base: process.env.NODE_ENV === 'production' ? '/2dto/' : '/',
 });
 ```
 
@@ -197,17 +196,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20
-          cache: npm
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install --frozen-lockfile
 
       - name: Build production bundle
-        run: npm run build
+        run: bun run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
