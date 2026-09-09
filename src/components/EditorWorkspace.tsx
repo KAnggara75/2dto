@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { AlertCircle, FileCode, CheckCircle2, Files } from 'lucide-react';
+import { AlertCircle, FileCode, CheckCircle2, Files, GripVertical } from 'lucide-react';
 import type { GeneratedJavaFile } from '../lib/converter/types';
 
 interface EditorWorkspaceProps {
@@ -22,15 +22,63 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
   activeFileIndex,
   onSelectFileIndex,
 }) => {
+  // Left pane width percentage (default: 50%, max: 50%, min: 20%)
+  const [leftWidthPercent, setLeftWidthPercent] = useState<number>(50);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const currentX = e.clientX - containerRect.left;
+      let newPercent = (currentX / containerRect.width) * 100;
+
+      // Restrict maximum width to 50% (as requested: "maksimal ukuran 50 lebar layar")
+      // and minimum width to 20% for usability
+      if (newPercent > 50) newPercent = 50;
+      if (newPercent < 20) newPercent = 20;
+
+      setLeftWidthPercent(newPercent);
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
   const currentCode =
     files.length > 0 && files[activeFileIndex]
       ? files[activeFileIndex].code
       : generatedCode;
 
   return (
-    <div className="flex-1 grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-800 h-[calc(100vh-105px)] overflow-hidden">
-      {/* Left Pane: JSON Input */}
-      <div className="flex flex-col h-full bg-slate-950">
+    <div
+      ref={containerRef}
+      className={`flex-1 flex flex-col md:flex-row h-[calc(100vh-105px)] overflow-hidden select-none ${
+        isDragging ? 'cursor-col-resize select-none' : ''
+      }`}
+    >
+      {/* Left Pane: JSON Input (Dynamic width up to 50%) */}
+      <div
+        style={{ width: `${leftWidthPercent}%` }}
+        className="flex flex-col h-full bg-slate-950 border-r border-slate-800 shrink-0"
+      >
         <div className="bg-slate-900/60 px-4 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-400"></span>
@@ -70,8 +118,21 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
         )}
       </div>
 
-      {/* Right Pane: Java DTO Output */}
-      <div className="flex flex-col h-full bg-slate-950">
+      {/* Draggable Divider Handle */}
+      <div
+        onMouseDown={handleMouseDown}
+        className={`hidden md:flex items-center justify-center w-2 -mx-1 z-20 cursor-col-resize group hover:bg-indigo-500/30 transition select-none ${
+          isDragging ? 'bg-indigo-600' : 'bg-transparent'
+        }`}
+        title="Drag to resize editor (Max: 50% screen width)"
+      >
+        <div className="w-1 h-8 rounded-full bg-slate-700 group-hover:bg-indigo-400 flex items-center justify-center transition">
+          <GripVertical className="w-3 h-3 text-slate-400 group-hover:text-white" />
+        </div>
+      </div>
+
+      {/* Right Pane: Java DTO Output (Takes remaining space) */}
+      <div className="flex-1 flex flex-col h-full bg-slate-950 min-w-0">
         <div className="bg-slate-900/60 px-4 py-1.5 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
