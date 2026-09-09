@@ -72,3 +72,27 @@
 - **Consequences**:
   - Positif: Seluruh aset bundle di-load secara presisi di custom subdomain root.
   - Negatif: Jika di masa depan ingin diakses via fallback URL `<username>.github.io/2dto/`, subpath tersebut tidak akan cocok tanpa konfigurasi reverse proxy atau conditional base path.
+
+---
+
+## ADR-007: Resizable Workspace Split Pane with 50% Maximum Boundary
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & commit `ac22f1c`
+- **Context**: Tampilan dua panel Monaco Editor sebelumnya berukuran statis seimbang. Pengguna membutuhkan fleksibilitas memperbesar atau memperkecil editor JSON input sesuai kompleksitas payload, namun panel output Java tetap harus memiliki ruang minimal 50% lebar layar.
+- **Decision**: Mengimplementasikan custom drag-to-resize divider di `EditorWorkspace.tsx` dengan batas persentase minimal 20% dan maksimal 50% lebar kontainer untuk panel input.
+- **Consequences**:
+  - Positif: Pengalaman editor lebih adaptif untuk berbagai ukuran layar tanpa merusak proporsi output Java DTO.
+  - Negatif: Menggunakan mouse drag event listener global pada window saat proses resize aktif.
+
+---
+
+## ADR-008: Header Removal and Action Buttons Consolidation into Output Pane
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & commits `ac8d68e`, `8739e17`, `cfeb764`
+- **Context**: Bar Header atas (berisi logo 2dto, badge *Client-Side*, dan slogan privasi) memakan ruang vertikal layar yang seharusnya dimaksimalkan untuk editor kode.
+- **Decision**: Menghapus bar Header secara menyeluruh dan mengonsolidasikan tombol aksi cepat (*Load Sample*, *Copy Code*, dan *Download*) langsung ke bar judul panel output *Generated Java DTO*.
+- **Consequences**:
+  - Positif: Ruang vertikal editor Monaco bertambah signifikan, antarmuka lebih bersih dan fungsional, serta aksi terkait output terintegrasi secara kontekstual di atas panel kode Java.
+  - Negatif: Informasi branding dan link GitHub tidak lagi ditampilkan di UI utama.
