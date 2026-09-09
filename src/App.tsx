@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import JSZip from 'jszip';
 import { Header } from './components/Header';
 import { ConfigToolbar } from './components/ConfigToolbar';
 import { EditorWorkspace } from './components/EditorWorkspace';
@@ -47,6 +48,7 @@ export const App: React.FC = () => {
 
   const [copied, setCopied] = useState<boolean>(false);
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
+  const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
 
   // Debounce JSON changes by 250ms for smooth editing
   useEffect(() => {
@@ -57,46 +59,83 @@ export const App: React.FC = () => {
   }, [rawJson]);
 
   // Conversion result
-  const generatedCode = useMemo(() => {
+  const conversionResult = useMemo(() => {
     if (!debouncedJson.trim()) {
       setErrorFeedback(null);
-      return '';
+      return { code: '', files: [], classes: [] };
     }
 
     try {
       const result = convertJsonToDto(debouncedJson, config);
       setErrorFeedback(null);
-      return result.code;
+      return result;
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       setErrorFeedback(`JSON Parse Error: ${message}`);
-      return '';
+      return { code: '', files: [], classes: [] };
     }
   }, [debouncedJson, config]);
 
+  const { code: generatedCode, files } = conversionResult;
+
+  // Ensure active index is within bounds
+  useEffect(() => {
+    if (activeFileIndex >= files.length) {
+      setActiveFileIndex(0);
+    }
+  }, [files.length, activeFileIndex]);
+
   const handleCopy = useCallback(async () => {
-    if (!generatedCode) return;
+    const codeToCopy =
+      files.length > 0 && files[activeFileIndex]
+        ? files[activeFileIndex].code
+        : generatedCode;
+
+    if (!codeToCopy) return;
     try {
-      await navigator.clipboard.writeText(generatedCode);
+      await navigator.clipboard.writeText(codeToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (e) {
       console.error('Failed to copy', e);
     }
-  }, [generatedCode]);
+  }, [files, activeFileIndex, generatedCode]);
 
-  const handleDownload = useCallback(() => {
-    if (!generatedCode) return;
-    const blob = new Blob([generatedCode], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${config.rootClassName || 'Dto'}.java`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, [generatedCode, config.rootClassName]);
+  const handleDownload = useCallback(async () => {
+    if (files.length === 0 && !generatedCode) return;
+
+    if (files.length > 1) {
+      // Download multi-file classes as zip archive
+      const zip = new JSZip();
+      for (const file of files) {
+        zip.file(file.filename, file.code);
+      }
+      const content = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(content);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${config.rootClassName || 'dto'}-classes.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } else {
+      // Single file download
+      const singleFile = files[0];
+      const codeContent = singleFile ? singleFile.code : generatedCode;
+      const filename = singleFile ? singleFile.filename : `${config.rootClassName || 'Dto'}.java`;
+
+      const blob = new Blob([codeContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+  }, [files, generatedCode, config.rootClassName]);
 
   const handleLoadSample = useCallback(() => {
     setRawJson(SAMPLE_JSON);
@@ -104,6 +143,7 @@ export const App: React.FC = () => {
       ...prev,
       rootClassName: 'CustomerProfile',
     }));
+    setActiveFileIndex(0);
   }, []);
 
   return (
@@ -112,15 +152,19 @@ export const App: React.FC = () => {
         onCopy={handleCopy}
         onDownload={handleDownload}
         copied={copied}
-        hasOutput={Boolean(generatedCode)}
+        hasOutput={Boolean(generatedCode || files.length > 0)}
+        fileCount={files.length}
         onLoadSample={handleLoadSample}
       />
       <ConfigToolbar config={config} onChange={setConfig} />
       <EditorWorkspace
         rawJson={rawJson}
         onJsonChange={(val) => setRawJson(val ?? '')}
+        files={files}
         generatedCode={generatedCode}
         errorFeedback={errorFeedback}
+        activeFileIndex={activeFileIndex}
+        onSelectFileIndex={setActiveFileIndex}
       />
     </div>
   );
