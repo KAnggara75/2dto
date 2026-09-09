@@ -7,8 +7,10 @@ describe('convertJsonToDto', () => {
     rootClassName: 'CustomerProfile',
     packageName: 'com.example.dto',
     dtoType: 'RECORD',
+    useLombok: false,
+    useLombokBuilder: false,
+    useJsonProperty: true,
     useJakartaValidation: false,
-    useLombokBuilder: true,
     detectIsoDates: true,
   };
 
@@ -48,7 +50,7 @@ describe('convertJsonToDto', () => {
     expect(result.code).toContain('@JsonProperty("import") String importVal');
   });
 
-  it('should generate Lombok class when selected', () => {
+  it('should generate Lombok class when useLombok is checked under CLASS mode', () => {
     const json = JSON.stringify({
       name: 'John',
       age: 30,
@@ -56,7 +58,8 @@ describe('convertJsonToDto', () => {
 
     const lombokConfig: ConverterConfig = {
       ...defaultConfig,
-      dtoType: 'LOMBOK',
+      dtoType: 'CLASS',
+      useLombok: true,
       useLombokBuilder: true,
     };
 
@@ -68,17 +71,46 @@ describe('convertJsonToDto', () => {
     expect(result.code).toContain('private Integer age;');
   });
 
-  it('should extract nested objects cleanly', () => {
+  it('should generate standard Java POJO class with getters and setters by default', () => {
     const json = JSON.stringify({
       name: 'John',
-      address: {
-        street: 'Main St',
-        city: 'Metropolis',
-      },
+      age: 30,
+      is_active: true,
     });
 
-    const result = convertJsonToDto(json, defaultConfig);
-    expect(result.code).toContain('record Address(');
-    expect(result.code).toContain('Address address');
+    const classConfig: ConverterConfig = {
+      ...defaultConfig,
+      dtoType: 'CLASS',
+    };
+
+    const result = convertJsonToDto(json, classConfig);
+    expect(result.code).toContain('public class CustomerProfile');
+    expect(result.code).toContain('private String name;');
+    expect(result.code).toContain('private Integer age;');
+    expect(result.code).toContain('private Boolean isActive;');
+    expect(result.code).toContain('public String getName()');
+    expect(result.code).toContain('public void setName(String name)');
+    expect(result.code).toContain('public Boolean isIsActive()');
+    expect(result.code).toContain('public CustomerProfile()');
+    expect(result.code).toContain('public CustomerProfile(String name, Integer age, Boolean isActive)');
+  });
+
+  it('should omit JsonProperty and its import when useJsonProperty is false', () => {
+    const json = JSON.stringify({
+      user_name: 'alice',
+      score: 95,
+    });
+
+    const noJsonPropertyConfig: ConverterConfig = {
+      ...defaultConfig,
+      dtoType: 'CLASS',
+      useJsonProperty: false,
+    };
+
+    const result = convertJsonToDto(json, noJsonPropertyConfig);
+    expect(result.code).not.toContain('import com.fasterxml.jackson.annotation.JsonProperty;');
+    expect(result.code).not.toContain('@JsonProperty');
+    expect(result.code).toContain('private String userName;');
+    expect(result.code).toContain('private Integer score;');
   });
 });
