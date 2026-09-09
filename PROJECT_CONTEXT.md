@@ -7,9 +7,11 @@
 
 ## 2. System Boundary
 - **In Boundary**:
-  - Web UI SPA dengan dual-pane code editor Monaco.
+  - Web UI SPA dengan dual-pane code editor Monaco (resizable dengan pembatas 50% lebar layar).
   - In-browser AST generator, lossless number parser, inferrer, sanitizer, dan generator kode Java.
-  - Export fitur: Copy to clipboard dan download file `.java`.
+  - Multi-file separation untuk sub-objek bersarang dengan tab bar interaktif.
+  - Indikator status JSON real-time (hijau: valid, kuning: kosong, merah: invalid).
+  - Export fitur: Copy to clipboard dan download individual `.java` atau `.zip` (multi-file).
   - Static hosting via GitHub Pages.
 - **Out of Boundary**:
   - Tidak memiliki backend server / REST API runtime.
