@@ -26,7 +26,14 @@ export interface ClassMetadata {
   fields: FieldMetadata[];
 }
 
+export interface GeneratedJavaFile {
+  filename: string;
+  className: string;
+  code: string;
+}
+
 export interface ConversionResult {
   code: string;
+  files: GeneratedJavaFile[];
   classes: ClassMetadata[];
 }
