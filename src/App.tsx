@@ -92,9 +92,14 @@ export const App: React.FC = () => {
     }
   }, [isDark]);
 
-  const handleSelectThemeMode = useCallback((mode: 'system' | 'light' | 'dark') => {
-    localStorage.setItem('theme-mode', mode);
-    setThemeMode(mode);
+  const handleCycleThemeMode = useCallback(() => {
+    setThemeMode((prev) => {
+      // Cycle order: light -> dark -> system -> light
+      const nextMode: 'system' | 'light' | 'dark' =
+        prev === 'light' ? 'dark' : prev === 'dark' ? 'system' : 'light';
+      localStorage.setItem('theme-mode', nextMode);
+      return nextMode;
+    });
   }, []);
 
   // Debounce JSON changes by 250ms for smooth editing
@@ -199,7 +204,7 @@ export const App: React.FC = () => {
         config={config}
         onChange={setConfig}
         themeMode={themeMode}
-        onSelectThemeMode={handleSelectThemeMode}
+        onCycleThemeMode={handleCycleThemeMode}
       />
       <EditorWorkspace
         rawJson={rawJson}
