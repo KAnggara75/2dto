@@ -174,11 +174,13 @@ function generateClass(
 
   // All-Args Constructor if fields exist
   if (cls.fields.length > 0) {
-    const params = cls.fields.map((f) => `${f.javaType} ${f.sanitizedFieldName}`).join(', ');
+    const params = cls.fields
+      .map((f) => `        ${f.javaType} ${f.sanitizedFieldName}`)
+      .join(',\n');
     const assignments = cls.fields
       .map((f) => `        this.${f.sanitizedFieldName} = ${f.sanitizedFieldName};`)
       .join('\n');
-    sections.push(`    public ${cls.className}(${params}) {\n${assignments}\n    }`);
+    sections.push(`    public ${cls.className}(\n${params}\n    ) {\n${assignments}\n    }`);
   }
 
   // Getters and Setters
