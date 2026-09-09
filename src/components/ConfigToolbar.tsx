@@ -1,13 +1,20 @@
 import React from 'react';
-import { CheckSquare, Square, Package, Type } from 'lucide-react';
+import { CheckSquare, Square, Package, Type, Sun, Moon, Laptop } from 'lucide-react';
 import type { ConverterConfig } from '../lib/converter/types';
 
 interface ConfigToolbarProps {
   config: ConverterConfig;
   onChange: (newConfig: ConverterConfig) => void;
+  themeMode?: 'system' | 'light' | 'dark';
+  onSelectThemeMode?: (mode: 'system' | 'light' | 'dark') => void;
 }
 
-export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }) => {
+export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
+  config,
+  onChange,
+  themeMode = 'system',
+  onSelectThemeMode,
+}) => {
   const update = <K extends keyof ConverterConfig>(key: K, value: ConverterConfig[K]) => {
     onChange({
       ...config,
@@ -170,6 +177,58 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }
               </label>
             )}
           </>
+        )}
+
+        {/* 3-Way Theme Mode Selector: Light, Dark, System */}
+        {onSelectThemeMode && (
+          <div className="pl-2 border-l border-slate-200 dark:border-slate-800 flex items-center">
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => onSelectThemeMode('light')}
+                className={`px-2 py-1 rounded-md transition cursor-pointer flex items-center gap-1 font-medium ${
+                  themeMode === 'light'
+                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+                title="Light mode"
+                aria-label="Light mode"
+              >
+                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-[11px] hidden sm:inline">Light</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectThemeMode('dark')}
+                className={`px-2 py-1 rounded-md transition cursor-pointer flex items-center gap-1 font-medium ${
+                  themeMode === 'dark'
+                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+                title="Dark mode"
+                aria-label="Dark mode"
+              >
+                <Moon className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                <span className="text-[11px] hidden sm:inline">Dark</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onSelectThemeMode('system')}
+                className={`px-2 py-1 rounded-md transition cursor-pointer flex items-center gap-1 font-medium ${
+                  themeMode === 'system'
+                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                }`}
+                title="Follow system preference"
+                aria-label="System mode"
+              >
+                <Laptop className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                <span className="text-[11px] hidden sm:inline">System</span>
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

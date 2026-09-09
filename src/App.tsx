@@ -49,8 +49,18 @@ export const App: React.FC = () => {
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
   const [activeFileIndex, setActiveFileIndex] = useState<number>(0);
 
-  // System theme detection (read from user's system preferences)
-  const [isDark, setIsDark] = useState<boolean>(() => {
+  // Theme mode: 'system' | 'light' | 'dark'
+  const [themeMode, setThemeMode] = useState<'system' | 'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme-mode');
+      if (saved === 'light' || saved === 'dark' || saved === 'system') {
+        return saved;
+      }
+    }
+    return 'system';
+  });
+
+  const [systemIsDark, setSystemIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined' && window.matchMedia) {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
@@ -62,13 +72,15 @@ export const App: React.FC = () => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const handleChange = (e: MediaQueryListEvent) => {
-      setIsDark(e.matches);
+      setSystemIsDark(e.matches);
     };
 
-    setIsDark(mediaQuery.matches);
+    setSystemIsDark(mediaQuery.matches);
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
+
+  const isDark = themeMode === 'system' ? systemIsDark : themeMode === 'dark';
 
   // Sync dark class on root document element
   useEffect(() => {
@@ -79,6 +91,11 @@ export const App: React.FC = () => {
       root.classList.remove('dark');
     }
   }, [isDark]);
+
+  const handleSelectThemeMode = useCallback((mode: 'system' | 'light' | 'dark') => {
+    localStorage.setItem('theme-mode', mode);
+    setThemeMode(mode);
+  }, []);
 
   // Debounce JSON changes by 250ms for smooth editing
   useEffect(() => {
@@ -178,7 +195,12 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 overflow-hidden font-sans">
-      <ConfigToolbar config={config} onChange={setConfig} />
+      <ConfigToolbar
+        config={config}
+        onChange={setConfig}
+        themeMode={themeMode}
+        onSelectThemeMode={handleSelectThemeMode}
+      />
       <EditorWorkspace
         rawJson={rawJson}
         onJsonChange={(val) => setRawJson(val ?? '')}
