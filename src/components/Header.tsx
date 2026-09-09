@@ -6,6 +6,7 @@ interface HeaderProps {
   onDownload: () => void;
   copied: boolean;
   hasOutput: boolean;
+  fileCount: number;
   onLoadSample: () => void;
 }
 
@@ -14,6 +15,7 @@ export const Header: React.FC<HeaderProps> = ({
   onDownload,
   copied,
   hasOutput,
+  fileCount,
   onLoadSample,
 }) => {
   return (
@@ -82,7 +84,8 @@ export const Header: React.FC<HeaderProps> = ({
               : 'border-slate-800 bg-slate-900/50 text-slate-600 cursor-not-allowed'
           }`}
         >
-          <Download className="w-3.5 h-3.5" /> Download .java
+          <Download className="w-3.5 h-3.5" />
+          {fileCount > 1 ? `Download (${fileCount} .java in .zip)` : 'Download .java'}
         </button>
 
         <a
