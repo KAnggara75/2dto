@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
-import { AlertCircle, FileCode, CheckCircle2, Files, GripVertical } from 'lucide-react';
+import { AlertCircle, FileCode, Files, GripVertical, Sparkles, Copy, Check, Download } from 'lucide-react';
 import type { GeneratedJavaFile } from '../lib/converter/types';
 
 interface EditorWorkspaceProps {
@@ -11,6 +11,11 @@ interface EditorWorkspaceProps {
   errorFeedback: string | null;
   activeFileIndex: number;
   onSelectFileIndex: (index: number) => void;
+  onLoadSample: () => void;
+  onCopy: () => void;
+  onDownload: () => void;
+  copied: boolean;
+  hasOutput: boolean;
 }
 
 export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
@@ -21,6 +26,11 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
   errorFeedback,
   activeFileIndex,
   onSelectFileIndex,
+  onLoadSample,
+  onCopy,
+  onDownload,
+  copied,
+  hasOutput,
 }) => {
   // Left pane width percentage (default: 50%, max: 50%, min: 20%)
   const [leftWidthPercent, setLeftWidthPercent] = useState<number>(50);
@@ -152,19 +162,65 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
 
       {/* Right Pane: Java DTO Output (Takes remaining space) */}
       <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-slate-950 overflow-hidden">
-        <div className="bg-slate-900/60 px-4 py-2 border-b border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400 shrink-0 min-h-[38px]">
+        <div className="bg-slate-900/60 px-4 py-1.5 border-b border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-400 shrink-0 min-h-[42px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
             <FileCode className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Generated Java DTO</span>
+            <span className="font-semibold text-slate-300">Generated Java DTO</span>
             {files.length > 1 && (
               <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded border border-indigo-500/30 flex items-center gap-1 font-sans">
                 <Files className="w-3 h-3" /> {files.length} Separate Files
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-emerald-400/90 font-sans">
-            <CheckCircle2 className="w-3.5 h-3.5" /> 1 Class / File
+
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={onLoadSample}
+              className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition cursor-pointer font-sans"
+              title="Load Sample JSON"
+            >
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              Load Sample
+            </button>
+
+            <button
+              type="button"
+              onClick={onCopy}
+              disabled={!hasOutput}
+              className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded transition cursor-pointer shadow-sm font-sans ${
+                copied
+                  ? 'bg-emerald-600 text-white'
+                  : hasOutput
+                  ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                  : 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              }`}
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3" /> Copied!
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3" /> Copy Code
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={onDownload}
+              disabled={!hasOutput}
+              className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded border transition cursor-pointer font-sans ${
+                hasOutput
+                  ? 'border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200'
+                  : 'border-slate-800 bg-slate-900/50 text-slate-600 cursor-not-allowed'
+              }`}
+            >
+              <Download className="w-3 h-3" />
+              {files.length > 1 ? `Download (${files.length} .java in .zip)` : 'Download .java'}
+            </button>
           </div>
         </div>
 
