@@ -113,4 +113,40 @@ describe('convertJsonToDto', () => {
     expect(result.code).toContain('private String userName;');
     expect(result.code).toContain('private Integer score;');
   });
+
+  it('should generate multiple separate files for nested objects (1 class per file)', () => {
+    const json = JSON.stringify({
+      order_id: 101,
+      customer: {
+        id: 1,
+        name: 'Bob',
+      },
+      shipping_address: {
+        city: 'Bandung',
+        zip_code: '40115',
+      },
+    });
+
+    const result = convertJsonToDto(json, {
+      ...defaultConfig,
+      rootClassName: 'OrderDto',
+    });
+
+    // 1 root (OrderDto) + 2 nested (Customer, ShippingAddress) = 3 separate files
+    expect(result.files.length).toBe(3);
+    const filenames = result.files.map((f) => f.filename);
+    expect(filenames).toContain('Customer.java');
+    expect(filenames).toContain('ShippingAddress.java');
+    expect(filenames).toContain('OrderDto.java');
+
+    // Verify each file has only its own public top-level class/record
+    const customerFile = result.files.find((f) => f.filename === 'Customer.java')!;
+    expect(customerFile.code).toContain('public record Customer(');
+    expect(customerFile.code).not.toContain('OrderDto');
+
+    const orderFile = result.files.find((f) => f.filename === 'OrderDto.java')!;
+    expect(orderFile.code).toContain('public record OrderDto(');
+    expect(orderFile.code).toContain('Customer customer');
+    expect(orderFile.code).toContain('ShippingAddress shippingAddress');
+  });
 });
