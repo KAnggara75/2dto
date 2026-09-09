@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://2dto.kanggara.my.id/sitemap.xml
