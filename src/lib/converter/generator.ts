@@ -1,31 +1,40 @@
-import type { ClassMetadata, ConverterConfig } from './types';
+import type { ClassMetadata, ConverterConfig, GeneratedJavaFile } from './types';
 import { toPascalCase } from './sanitizer';
 
-export function generateJavaCode(classes: ClassMetadata[], config: ConverterConfig): string {
+export function generateJavaFiles(classes: ClassMetadata[], config: ConverterConfig): GeneratedJavaFile[] {
   if (classes.length === 0) {
-    return '// Provide valid JSON to generate Java DTO';
+    return [];
   }
 
+  return classes.map((cls) => {
+    const filename = `${cls.className}.java`;
+    const code = generateSingleClassFile(cls, config);
+    return {
+      filename,
+      className: cls.className,
+      code,
+    };
+  });
+}
+
+function generateSingleClassFile(cls: ClassMetadata, config: ConverterConfig): string {
   const imports = new Set<string>();
-  if (config.useJsonProperty) {
+  if (config.useJsonProperty && cls.fields.length > 0) {
     imports.add('import com.fasterxml.jackson.annotation.JsonProperty;');
   }
 
-  // Inspect what imports are needed
   let hasList = false;
   let hasInstant = false;
   let hasLocalDate = false;
   let hasBigInteger = false;
   let hasBigDecimal = false;
 
-  for (const cls of classes) {
-    for (const field of cls.fields) {
-      if (field.isCollection || field.javaType.includes('List<')) hasList = true;
-      if (field.javaType === 'Instant') hasInstant = true;
-      if (field.javaType === 'LocalDate') hasLocalDate = true;
-      if (field.javaType === 'BigInteger') hasBigInteger = true;
-      if (field.javaType === 'BigDecimal') hasBigDecimal = true;
-    }
+  for (const field of cls.fields) {
+    if (field.isCollection || field.javaType.includes('List<')) hasList = true;
+    if (field.javaType === 'Instant') hasInstant = true;
+    if (field.javaType === 'LocalDate') hasLocalDate = true;
+    if (field.javaType === 'BigInteger') hasBigInteger = true;
+    if (field.javaType === 'BigDecimal') hasBigDecimal = true;
   }
 
   if (hasList) imports.add('import java.util.List;');
@@ -45,7 +54,9 @@ export function generateJavaCode(classes: ClassMetadata[], config: ConverterConf
 
   if (config.useJakartaValidation) {
     imports.add('import jakarta.validation.constraints.NotNull;');
-    imports.add('import jakarta.validation.Valid;');
+    if (cls.fields.some((f) => f.isNestedObject)) {
+      imports.add('import jakarta.validation.Valid;');
+    }
   }
 
   const sortedImports = Array.from(imports).sort();
@@ -54,17 +65,25 @@ export function generateJavaCode(classes: ClassMetadata[], config: ConverterConf
     ? `package ${config.packageName};\n\n`
     : '';
 
-  const importsDeclaration = sortedImports.join('\n') + '\n\n';
+  const importsDeclaration = sortedImports.length > 0
+    ? sortedImports.join('\n') + '\n\n'
+    : '';
 
-  const classDefinitions = classes.map((cls, index) => {
-    const isPublic = index === classes.length - 1; // root is usually last in dependency order
-    if (config.dtoType === 'RECORD') {
-      return generateRecord(cls, isPublic, config);
-    }
-    return generateClass(cls, isPublic, config);
-  });
+  // Each file has a top-level public class/record
+  const classDef = config.dtoType === 'RECORD'
+    ? generateRecord(cls, true, config)
+    : generateClass(cls, true, config);
 
-  return `${packageDeclaration}${importsDeclaration}${classDefinitions.join('\n\n')}\n`;
+  return `${packageDeclaration}${importsDeclaration}${classDef}\n`;
+}
+
+export function generateJavaCode(classes: ClassMetadata[], config: ConverterConfig): string {
+  if (classes.length === 0) {
+    return '// Provide valid JSON to generate Java DTO';
+  }
+
+  const files = generateJavaFiles(classes, config);
+  return files.map((f) => f.code).join('\n// ' + '='.repeat(50) + '\n\n');
 }
 
 function generateRecord(cls: ClassMetadata, isPublic: boolean, config: ConverterConfig): string {
