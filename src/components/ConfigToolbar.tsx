@@ -18,8 +18,19 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }
   return (
     <div className="bg-slate-900/90 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-300">
       <div className="flex flex-wrap items-center gap-4">
-        {/* Output Mode Record vs Lombok */}
+        {/* Output Mode: Standard Class vs Record */}
         <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-lg border border-slate-800">
+          <button
+            type="button"
+            onClick={() => update('dtoType', 'CLASS')}
+            className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
+              config.dtoType === 'CLASS'
+                ? 'bg-indigo-600 text-white shadow'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            Java Class (POJO)
+          </button>
           <button
             type="button"
             onClick={() => update('dtoType', 'RECORD')}
@@ -30,17 +41,6 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }
             }`}
           >
             Java 17+ Record
-          </button>
-          <button
-            type="button"
-            onClick={() => update('dtoType', 'LOMBOK')}
-            className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
-              config.dtoType === 'LOMBOK'
-                ? 'bg-indigo-600 text-white shadow'
-                : 'text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            Lombok Class
           </button>
         </div>
 
@@ -76,6 +76,21 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }
         <label className="flex items-center gap-1.5 cursor-pointer hover:text-white transition select-none">
           <input
             type="checkbox"
+            checked={config.useJsonProperty}
+            onChange={(e) => update('useJsonProperty', e.target.checked)}
+            className="sr-only"
+          />
+          {config.useJsonProperty ? (
+            <CheckSquare className="w-4 h-4 text-indigo-400" />
+          ) : (
+            <Square className="w-4 h-4 text-slate-500" />
+          )}
+          <span>@JsonProperty</span>
+        </label>
+
+        <label className="flex items-center gap-1.5 cursor-pointer hover:text-white transition select-none">
+          <input
+            type="checkbox"
             checked={config.detectIsoDates}
             onChange={(e) => update('detectIsoDates', e.target.checked)}
             className="sr-only"
@@ -103,21 +118,40 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({ config, onChange }
           <span>Jakarta Validation (@NotNull, @Valid)</span>
         </label>
 
-        {config.dtoType === 'LOMBOK' && (
-          <label className="flex items-center gap-1.5 cursor-pointer hover:text-white transition select-none">
-            <input
-              type="checkbox"
-              checked={config.useLombokBuilder}
-              onChange={(e) => update('useLombokBuilder', e.target.checked)}
-              className="sr-only"
-            />
-            {config.useLombokBuilder ? (
-              <CheckSquare className="w-4 h-4 text-indigo-400" />
-            ) : (
-              <Square className="w-4 h-4 text-slate-500" />
+        {config.dtoType === 'CLASS' && (
+          <>
+            <label className="flex items-center gap-1.5 cursor-pointer hover:text-white transition select-none">
+              <input
+                type="checkbox"
+                checked={config.useLombok}
+                onChange={(e) => update('useLombok', e.target.checked)}
+                className="sr-only"
+              />
+              {config.useLombok ? (
+                <CheckSquare className="w-4 h-4 text-indigo-400" />
+              ) : (
+                <Square className="w-4 h-4 text-slate-500" />
+              )}
+              <span>Lombok (@Data)</span>
+            </label>
+
+            {config.useLombok && (
+              <label className="flex items-center gap-1.5 cursor-pointer hover:text-white transition select-none">
+                <input
+                  type="checkbox"
+                  checked={config.useLombokBuilder}
+                  onChange={(e) => update('useLombokBuilder', e.target.checked)}
+                  className="sr-only"
+                />
+                {config.useLombokBuilder ? (
+                  <CheckSquare className="w-4 h-4 text-indigo-400" />
+                ) : (
+                  <Square className="w-4 h-4 text-slate-500" />
+                )}
+                <span>@Builder</span>
+              </label>
             )}
-            <span>@Builder</span>
-          </label>
+          </>
         )}
       </div>
     </div>
