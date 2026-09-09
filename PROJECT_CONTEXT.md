@@ -11,6 +11,7 @@
   - In-browser AST generator, lossless number parser, inferrer, sanitizer, dan generator kode Java.
   - Multi-file separation untuk sub-objek bersarang dengan tab bar interaktif.
   - Indikator status JSON real-time (hijau: valid, kuning: kosong, merah: invalid).
+  - Tema adaptif: mode Light, Dark, dan System dengan tombol siklus dan persistensi localStorage.
   - Export fitur: Copy to clipboard dan download individual `.java` atau `.zip` (multi-file).
   - Static hosting via GitHub Pages.
 - **Out of Boundary**:

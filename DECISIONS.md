@@ -96,3 +96,18 @@
 - **Consequences**:
   - Positif: Ruang vertikal editor Monaco bertambah signifikan, antarmuka lebih bersih dan fungsional, serta aksi terkait output terintegrasi secara kontekstual di atas panel kode Java.
   - Negatif: Informasi branding dan link GitHub tidak lagi ditampilkan di UI utama.
+
+---
+
+## ADR-009: Hybrid System-Aware and Cyclic Theme Mode Selection
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & commits `360141d`, `03b0b16`, `a1a8661`
+- **Context**: Aplikasi sebelumnya hanya beroperasi pada tema gelap permanen (`vs-dark`). Pengguna memerlukan dukungan tampilan terang (light mode) yang otomatis mendeteksi preferensi sistem OS pengguna, namun tetap memberikan kebebasan beralih manual tanpa menghabiskan ruang layar toolbar dengan banyak tombol.
+- **Decision**:
+  - Mendukung deteksi preferensi OS otomatis melalui media query `window.matchMedia('(prefers-color-scheme: dark)')`.
+  - Menerapkan Tailwind v4 custom dark variant `@custom-variant dark (&:where(.dark, .dark *));` dan tema Monaco adaptif (`vs` vs `vs-dark`).
+  - Mengimplementasikan 1 tombol tunggal yang bergantian siklus (`light` -> `dark` -> `system`) di pojok kanan atas toolbar dengan persistensi ke `localStorage`.
+- **Consequences**:
+  - Positif: Tampilan nyaman di berbagai kondisi pencahayaan, transisi mulus mengikuti OS, kontrol ringkas 1 tombol hemat ruang, dan preferensi pengguna tersimpan persisten.
+  - Negatif: Komponen UI Monaco dan Tailwind memerlukan styling kelas ganda (`dark:*`).

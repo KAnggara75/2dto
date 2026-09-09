@@ -13,13 +13,14 @@ Peta struktur antarmuka, tata letak fungsional, dan alur konversi aplikasi web *
 │   ├── Class & Package Customization
 │   │   ├── Root Class Name Input (Default: CustomerProfile / RootDto)
 │   │   └── Package Name Input (Default: com.example.dto)
-│   └── Annotation & Feature Options (Checkboxes)
-│       ├── @JsonProperty (Jackson field mapping)
-│       ├── ISO Dates (Instant / LocalDate auto-inference)
-│       ├── Jakarta Validation (@NotNull, @Valid)
-│       └── Lombok Options (Hanya aktif pada mode Java Class)
-│           ├── @Data, @NoArgsConstructor, @AllArgsConstructor
-│           └── @Builder
+│   ├── Annotation & Feature Options (Checkboxes)
+│   │   ├── @JsonProperty (Jackson field mapping)
+│   │   ├── ISO Dates (Instant / LocalDate auto-inference)
+│   │   ├── Jakarta Validation (@NotNull, @Valid)
+│   │   └── Lombok Options (Hanya aktif pada mode Java Class)
+│   │       ├── @Data, @NoArgsConstructor, @AllArgsConstructor
+│   │       └── @Builder
+│   └── Theme Mode Cycle Button (Pojok Kanan Atas: Light -> Dark -> System)
 │
 └── 2. Dual-Pane Resizable Editor Workspace (EditorWorkspace)
     │
