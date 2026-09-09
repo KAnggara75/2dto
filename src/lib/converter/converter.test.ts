@@ -92,7 +92,7 @@ describe('convertJsonToDto', () => {
     expect(result.code).toContain('public void setName(String name)');
     expect(result.code).toContain('public Boolean isIsActive()');
     expect(result.code).toContain('public CustomerProfile()');
-    expect(result.code).toContain('public CustomerProfile(String name, Integer age, Boolean isActive)');
+    expect(result.code).toContain('public CustomerProfile(\n        String name,\n        Integer age,\n        Boolean isActive\n    ) {');
   });
 
   it('should omit JsonProperty and its import when useJsonProperty is false', () => {
