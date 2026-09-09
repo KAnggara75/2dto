@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import JSZip from 'jszip';
-import { Header } from './components/Header';
 import { ConfigToolbar } from './components/ConfigToolbar';
 import { EditorWorkspace } from './components/EditorWorkspace';
 import { convertJsonToDto } from './lib/converter';
@@ -148,14 +147,6 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-950 text-slate-100 overflow-hidden font-sans">
-      <Header
-        onCopy={handleCopy}
-        onDownload={handleDownload}
-        copied={copied}
-        hasOutput={Boolean(generatedCode || files.length > 0)}
-        fileCount={files.length}
-        onLoadSample={handleLoadSample}
-      />
       <ConfigToolbar config={config} onChange={setConfig} />
       <EditorWorkspace
         rawJson={rawJson}
@@ -165,6 +156,11 @@ export const App: React.FC = () => {
         errorFeedback={errorFeedback}
         activeFileIndex={activeFileIndex}
         onSelectFileIndex={setActiveFileIndex}
+        onLoadSample={handleLoadSample}
+        onCopy={handleCopy}
+        onDownload={handleDownload}
+        copied={copied}
+        hasOutput={Boolean(generatedCode || files.length > 0)}
       />
     </div>
   );
