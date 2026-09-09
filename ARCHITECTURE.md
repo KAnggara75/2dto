@@ -7,9 +7,8 @@
 ```mermaid
 graph TD
     User([User Browser]) --> UI[React 19 Workspace UI]
-    UI --> Header[Header: Export, Sample, Copy]
     UI --> Toolbar[ConfigToolbar: DTO & Annotation Options]
-    UI --> MonacoIn[Monaco Editor: JSON Input]
+    UI --> MonacoIn[Monaco Editor: JSON Input & Status Dot]
     UI --> Debounce[Debounced State 250ms]
     
     Debounce --> Engine[Converter Engine]
@@ -18,7 +17,7 @@ graph TD
     Inferrer --> Sanitizer[Sanitizer: Keywords & Casing]
     Sanitizer --> AST[(In-Memory AST: ClassMetadata)]
     AST --> Generator[Java Code Generator]
-    Generator --> MonacoOut[Monaco Editor: Java Output View]
+    Generator --> MonacoOut[Monaco Editor: Java Output View & Action Buttons]
 ```
 
 ---
