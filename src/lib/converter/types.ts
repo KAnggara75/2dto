@@ -1,11 +1,13 @@
-export type DtoTargetType = 'RECORD' | 'LOMBOK';
+export type DtoTargetType = 'CLASS' | 'RECORD';
 
 export interface ConverterConfig {
   rootClassName: string;
   packageName: string;
   dtoType: DtoTargetType;
-  useJakartaValidation: boolean;
+  useLombok: boolean;
   useLombokBuilder: boolean;
+  useJsonProperty: boolean;
+  useJakartaValidation: boolean;
   detectIsoDates: boolean;
 }
 
