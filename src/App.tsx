@@ -37,9 +37,11 @@ export const App: React.FC = () => {
   const [config, setConfig] = useState<ConverterConfig>({
     rootClassName: 'CustomerProfile',
     packageName: 'com.example.dto',
-    dtoType: 'RECORD',
+    dtoType: 'CLASS',
+    useLombok: false,
+    useLombokBuilder: false,
+    useJsonProperty: false,
     useJakartaValidation: false,
-    useLombokBuilder: true,
     detectIsoDates: true,
   });
 
