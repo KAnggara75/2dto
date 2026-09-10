@@ -23,14 +23,24 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
   };
 
   return (
-    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-700 dark:text-slate-300">
-      <div className="flex flex-wrap items-center gap-4">
+    <div className="bg-white/95 dark:bg-[#222222]/95 border-b border-slate-200 dark:border-[#333333] px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-700 dark:text-slate-300">
+      <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+        {/* Brand Logo & Name */}
+        <div className="flex items-center gap-2 pr-1 border-r border-slate-200 dark:border-[#333333]">
+          <img
+            src="/icon.png"
+            alt="2dto logo"
+            className="w-5 h-5 rounded-full ring-1 ring-slate-300 dark:ring-slate-600 object-cover"
+          />
+          <span className="font-bold tracking-tight text-slate-900 dark:text-white text-sm">2dto</span>
+        </div>
+
         {/* GitHub Link */}
         <a
           href="https://github.com/KAnggara75/2dto"
           target="_blank"
           rel="noreferrer"
-          className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-300 dark:hover:border-slate-700 transition"
+          className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-[#2e2e2e] border border-transparent hover:border-slate-300 dark:hover:border-[#3a3a3a] transition"
           aria-label="GitHub Repository"
           title="View on GitHub"
         >
@@ -44,7 +54,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
         </a>
 
         {/* Output Mode: Standard Class vs Record */}
-        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 p-1 rounded-lg border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#1a1a1a] p-1 rounded-lg border border-slate-200 dark:border-[#333333]">
           <button
             type="button"
             onClick={() => update('dtoType', 'CLASS')}
@@ -70,7 +80,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
         </div>
 
         {/* Root Class Name */}
-        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#1a1a1a] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-[#333333]">
           <Type className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
           <label htmlFor="rootClassName" className="text-slate-700 dark:text-slate-300 font-medium cursor-pointer">Class:</label>
           <input
@@ -86,7 +96,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
         </div>
 
         {/* Package Name */}
-        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
+        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-[#1a1a1a] px-2.5 py-1 rounded-lg border border-slate-200 dark:border-[#333333]">
           <Package className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
           <label htmlFor="packageName" className="text-slate-700 dark:text-slate-300 font-medium cursor-pointer">Package:</label>
           <input
@@ -187,11 +197,11 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
 
         {/* Single Cycle Theme Button: light -> dark -> system */}
         {onCycleThemeMode && (
-          <div className="pl-2 border-l border-slate-200 dark:border-slate-800 flex items-center">
+          <div className="pl-2 border-l border-slate-200 dark:border-[#333333] flex items-center">
             <button
               type="button"
               onClick={onCycleThemeMode}
-              className="px-2.5 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 transition cursor-pointer flex items-center gap-1.5 shadow-2xs font-medium"
+              className="w-[88px] justify-center px-2 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-[#1a1a1a] hover:bg-slate-200 dark:hover:bg-[#2e2e2e] border border-slate-300 dark:border-[#333333] transition cursor-pointer flex items-center gap-1.5 shadow-2xs font-medium select-none"
               title={`Current: ${
                 themeMode === 'light'
                   ? 'Light (Click for Dark)'
@@ -202,13 +212,13 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
               aria-label="Toggle theme mode"
             >
               {themeMode === 'light' ? (
-                <Sun className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" />
+                <Sun className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500 shrink-0" />
               ) : themeMode === 'dark' ? (
-                <Moon className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                <Moon className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
               ) : (
-                <Laptop className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                <Laptop className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 shrink-0" />
               )}
-              <span className="text-[11px] capitalize">
+              <span className="text-[11px] capitalize w-[48px] text-left">
                 {themeMode}
               </span>
             </button>

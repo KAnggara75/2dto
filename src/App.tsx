@@ -199,7 +199,7 @@ export const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col h-screen w-screen bg-slate-100 text-slate-800 dark:bg-[#222222] dark:text-slate-100 overflow-hidden font-sans">
       <header role="banner">
         <ConfigToolbar
           config={config}

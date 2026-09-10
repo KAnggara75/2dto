@@ -150,14 +150,14 @@ const handleEditorWillMount: BeforeMount = (monaco) => {
       { token: 'delimiter.bracket', foreground: 'abb2bf' },
     ],
     colors: {
-      'editor.background': '#282c34',
+      'editor.background': '#222222',
       'editor.foreground': '#abb2bf',
-      'editor.lineHighlightBackground': '#2c313c',
-      'editorLineNumber.foreground': '#4b5263',
+      'editor.lineHighlightBackground': '#2a2a2a',
+      'editorLineNumber.foreground': '#5c6370',
       'editorLineNumber.activeForeground': '#abb2bf',
       'editorCursor.foreground': '#528bff',
-      'editor.selectionBackground': '#3e4451',
-      'editor.inactiveSelectionBackground': '#3a3f4b',
+      'editor.selectionBackground': '#3a3f4b',
+      'editor.inactiveSelectionBackground': '#30343d',
     },
   });
 };
@@ -263,9 +263,9 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       {/* Left Pane: JSON Input (Dynamic width up to 50%) */}
       <div
         style={{ width: `${leftWidthPercent}%` }}
-        className="flex flex-col h-full min-h-0 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 shrink-0 overflow-hidden"
+        className="flex flex-col h-full min-h-0 bg-white dark:bg-[#222222] border-r border-slate-200 dark:border-[#333333] shrink-0 overflow-hidden"
       >
-        <div className="bg-slate-100/90 dark:bg-slate-900/60 px-4 py-2 border-b border-slate-200 dark:border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-700 dark:text-slate-400 shrink-0">
+        <div className="bg-slate-100/90 dark:bg-[#1e1e1e] px-4 py-2 border-b border-slate-200 dark:border-[#333333] flex items-center justify-between text-xs font-mono text-slate-700 dark:text-slate-400 shrink-0">
           <div className="flex items-center gap-2">
             <span
               className={`w-2 h-2 rounded-full transition-colors duration-200 ${statusColorClass}`}
@@ -282,7 +282,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
             height="100%"
             defaultLanguage="json"
             beforeMount={handleEditorWillMount}
-            theme={isDark ? 'vs-dark' : 'vs'}
+            theme={isDark ? 'one-dark' : 'vs'}
             value={rawJson}
             onChange={onJsonChange}
             options={{
@@ -323,8 +323,8 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
       </div>
 
       {/* Right Pane: Java DTO Output (Takes remaining space) */}
-      <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-white dark:bg-slate-950 overflow-hidden">
-        <div className="bg-slate-100/90 dark:bg-slate-900/60 px-4 py-1.5 border-b border-slate-200 dark:border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-700 dark:text-slate-400 shrink-0 min-h-[42px]">
+      <div className="flex-1 flex flex-col h-full min-h-0 min-w-0 bg-white dark:bg-[#222222] overflow-hidden">
+        <div className="bg-slate-100/90 dark:bg-[#1e1e1e] px-4 py-1.5 border-b border-slate-200 dark:border-[#333333] flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-slate-700 dark:text-slate-400 shrink-0 min-h-[42px]">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
             <FileCode className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
@@ -340,7 +340,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
             <button
               type="button"
               onClick={onLoadSample}
-              className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition cursor-pointer font-sans shadow-xs"
+              className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded bg-white dark:bg-[#2e2e2e] hover:bg-slate-50 dark:hover:bg-[#383838] text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-[#3a3a3a] transition cursor-pointer font-sans shadow-xs"
               title="Load Sample JSON"
             >
               <Sparkles className="w-3 h-3 text-amber-500 dark:text-amber-400" />
@@ -356,7 +356,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                   ? 'bg-emerald-600 text-white'
                   : hasOutput
                   ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-transparent'
+                  : 'bg-slate-100 dark:bg-[#1a1a1a] text-slate-500 dark:text-slate-500 cursor-not-allowed border border-slate-300 dark:border-transparent'
               }`}
             >
               {copied ? (
@@ -376,8 +376,8 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
               disabled={!hasOutput}
               className={`inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded border transition cursor-pointer font-sans shadow-xs ${
                 hasOutput
-                  ? 'border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
-                  : 'border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-500 cursor-not-allowed'
+                  ? 'border-slate-300 dark:border-[#3a3a3a] bg-white dark:bg-[#2e2e2e] hover:bg-slate-50 dark:hover:bg-[#383838] text-slate-700 dark:text-slate-200'
+                  : 'border-slate-200 dark:border-[#333333] bg-slate-100/50 dark:bg-[#1a1a1a]/50 text-slate-500 dark:text-slate-500 cursor-not-allowed'
               }`}
             >
               <Download className="w-3 h-3" />
@@ -388,7 +388,7 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
 
         {/* Tab bar when multiple classes exist */}
         {files.length > 1 && (
-          <div className="flex items-center bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800/80 overflow-x-auto scrollbar-none px-2 py-1.5 gap-1.5 shrink-0 min-h-[36px]">
+          <div className="flex items-center bg-slate-50 dark:bg-[#1e1e1e] border-b border-slate-200 dark:border-[#333333] overflow-x-auto scrollbar-none px-2 py-1.5 gap-1.5 shrink-0 min-h-[36px]">
             {files.map((file, idx) => (
               <button
                 key={file.filename}
@@ -396,8 +396,8 @@ export const EditorWorkspace: React.FC<EditorWorkspaceProps> = ({
                 onClick={() => onSelectFileIndex(idx)}
                 className={`px-3 py-1 text-xs font-mono rounded transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0 ${
                   activeFileIndex === idx
-                    ? 'bg-white dark:bg-slate-800 text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-300 dark:border-indigo-500/40 shadow-xs'
-                    : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-900 border border-transparent'
+                    ? 'bg-white dark:bg-[#2e2e2e] text-indigo-700 dark:text-indigo-300 font-semibold border border-indigo-300 dark:border-indigo-500/40 shadow-xs'
+                    : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#282828] border border-transparent'
                 }`}
               >
                 <FileCode className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />

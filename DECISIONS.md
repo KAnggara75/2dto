@@ -171,3 +171,34 @@
 - **Consequences**:
   - Positif: Meningkatkan skor aksesibilitas Lighthouse ke tingkat optimal (100%), memastikan assistive technology mengenali tujuan input secara tepat, dan meningkatkan integrasi tema browser.
   - Negatif: Tidak ada dampak negatif.
+
+---
+
+## ADR-014: Custom Branding Icon and Multi-Resolution Favicon Integration
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & `public/`, `index.html`, `src/components/ConfigToolbar.tsx`
+- **Context**: Aplikasi sebelumnya menggunakan favicon placeholder default `vite.svg` dan belum memiliki logo identitas visual pada navigasi header.
+- **Decision**:
+  - Mengunduh avatar developer GitHub (`https://avatars.githubusercontent.com/u/24321218?v=4`) dan membuat aset multi-resolusi di `public/`: `favicon.ico`, `favicon-32x32.png`, `favicon.png`, `icon.png`, `apple-touch-icon.png` (180x180), `icon-192.png`, dan `icon-512.png`.
+  - Menghubungkan aset ikon di `index.html` (`<link rel="icon">`, `<link rel="shortcut icon">`, `<link rel="apple-touch-icon">`).
+  - Menambahkan brand logo bundar dan judul `2dto` di samping tautan repositori GitHub pada `ConfigToolbar.tsx`.
+- **Consequences**:
+  - Positif: Meningkatkan estetika identitas produk, kepatuhan audit PWA/Lighthouse, dan konsistensi ikon tab browser lintas perangkat desktop dan mobile.
+  - Negatif: Menambahkan beberapa aset PNG berukuran kecil (~18 KB) ke dalam direktori statis `public/`.
+
+---
+
+## ADR-015: RGB(34, 34, 34) Dark Palette Harmonization and Fixed-Width Theme Toggle
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & `src/components/ConfigToolbar.tsx`, `src/components/EditorWorkspace.tsx`, `src/App.tsx`, `index.html`
+- **Context**: Tema gelap sebelumnya menggunakan percampuran warna gelap bawaan One Dark (`#282c34`) dan Tailwind `slate-950` / `slate-900`. Developer menginginkan warna gelap berbasis `RGB(34, 34, 34)` (`#222222`). Selain itu, perubahan teks label tombol tema (`light`, `dark`, `system`) memiliki panjang karakter yang bervariasi sehingga memicu layout shift horizontal pada checklist konfigurasi lainnya saat diklik.
+- **Decision**:
+  - Mengubah warna latar Monaco editor One Dark (`editor.background`) menjadi `#222222` dengan line highlight `#2a2a2a`.
+  - Mengubah latar root shell (`App.tsx`), `index.html` body, dan meta `theme-color` menjadi `#222222`.
+  - Menyelaraskan seluruh header toolbar, subheader panel input/output, dan tab bar menjadi turunan harmonis `#222222`, `#1e1e1e`, `#1a1a1a`, dan border `#333333`.
+  - Mengunci lebar tombol tema ke ukuran tetap `w-[88px]` dengan wadah teks `w-[48px] text-left` dan ikon `shrink-0` untuk mengeliminasi pergeseran layout (Cumulative Layout Shift = 0).
+- **Consequences**:
+  - Positif: Tampilan antarmuka dark mode menjadi elegan dan konsisten, serta tidak ada kedipan atau geseran elemen checkbox saat pengguna mengganti mode tema.
+  - Negatif: Diperlukan nilai warna CSS custom class (`[#222222]`, `[#1e1e1e]`, `[#333333]`) untuk menimpa palet default Tailwind slate.
