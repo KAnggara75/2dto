@@ -216,3 +216,18 @@
 - **Consequences**:
   - Positif: Meningkatkan kenyamanan alur kerja developer secara signifikan (nama package tetap tersimpan saat reload halaman atau membuka sesi baru).
   - Negatif: Tidak ada dampak negatif. Nilai disimpan di storage lokal browser pengguna tanpa sinkronisasi jaringan (tetap 100% private).
+
+---
+
+## ADR-017: Mandatory @JsonProperty on Java Reserved Keywords
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & `src/lib/converter/sanitizer.ts`, `src/lib/converter/generator.ts`, `src/lib/converter/inferrer.ts`
+- **Context**: Saat pengguna mematikan checklist `@JsonProperty`, atribut field yang namanya bentrok dengan kata kunci terlarang Java (misal: `class`, `default`, `import`, `return`, `record`) disanitasi menjadi `classVal`, `defaultVal`, dsb. Tanpa anotasi `@JsonProperty("class")`, deserializer JSON Jackson tidak dapat memetakan key asli JSON ke nama field Java yang telah disanitasi, menyebabkan nilainya bernilai `null` saat runtime.
+- **Decision**:
+  - Menandai field yang bersumber dari kata kunci terlarang Java dengan flag `isReserved: true` di metadata AST.
+  - Memaksa penyematan anotasi `@JsonProperty("<originalKey>")` dan impor `com.fasterxml.jackson.annotation.JsonProperty` khusus untuk field yang berstatus `isReserved`, meskipun opsi `config.useJsonProperty` bernilai `false`.
+  - Menerapkan aturan ini secara seragam pada Java Class POJO, Lombok Class, dan Java 17+ Record.
+- **Consequences**:
+  - Positif: Mencegah bug fatal deserialisasi payload JSON yang mengandung kata kunci reserved Java (seperti `class` atau `default`) tanpa mengharuskan pengguna mencentang opsi `@JsonProperty` untuk seluruh field.
+  - Negatif: Mengakibatkan dependensi Jackson tersemat pada file Java DTO yang memiliki reserved keywords meskipun opsi anotasi dimatikan secara global.
