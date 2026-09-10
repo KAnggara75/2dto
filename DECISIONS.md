@@ -156,3 +156,18 @@
 - **Consequences**:
   - Positif: Teks dan kontrol UI sangat mudah dibaca pada berbagai tingkat pencahayaan layar dan memenuhi standar kepatuhan aksesibilitas WCAG 2.1 AA.
   - Negatif: Warna sedikit lebih gelap dibanding palet pastel awal, namun tetap selaras dengan desain keseluruhan.
+
+---
+
+## ADR-013: PageSpeed Form Accessibility Labels and Browser Theme Color
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: PageSpeed Insights audit & `index.html`, `src/components/ConfigToolbar.tsx`
+- **Context**: Audit performa dan aksesibilitas PageSpeed/Lighthouse mendeteksi bahwa input teks `Class` dan `Package` tidak terhubung dengan elemen `<label>` eksplisit yang memiliki atribut `for`/`id` yang cocok. Selain itu, dokumen HTML memerlukan tag `<meta name="theme-color">` untuk konsistensi rendering address bar browser.
+- **Decision**:
+  - Mengubah elemen pembungkus nama input menjadi `<label htmlFor="...">` yang terhubung langsung ke `id` dan `name` input terkait.
+  - Menambahkan atribut `aria-label="Root Class Name"` dan `aria-label="Package Name"`.
+  - Menambahkan `<meta name="theme-color" content="#020617" />` pada `<head>` di `index.html`.
+- **Consequences**:
+  - Positif: Meningkatkan skor aksesibilitas Lighthouse ke tingkat optimal (100%), memastikan assistive technology mengenali tujuan input secara tepat, dan meningkatkan integrasi tema browser.
+  - Negatif: Tidak ada dampak negatif.

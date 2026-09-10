@@ -72,12 +72,15 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
         {/* Root Class Name */}
         <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
           <Type className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-          <span className="text-slate-700 dark:text-slate-300 font-medium">Class:</span>
+          <label htmlFor="rootClassName" className="text-slate-700 dark:text-slate-300 font-medium cursor-pointer">Class:</label>
           <input
+            id="rootClassName"
+            name="rootClassName"
             type="text"
             value={config.rootClassName}
             onChange={(e) => update('rootClassName', e.target.value)}
             placeholder="RootDto"
+            aria-label="Root Class Name"
             className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-28 focus:ring-0 placeholder:text-slate-400"
           />
         </div>
@@ -85,12 +88,15 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
         {/* Package Name */}
         <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
           <Package className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-          <span className="text-slate-700 dark:text-slate-300 font-medium">Package:</span>
+          <label htmlFor="packageName" className="text-slate-700 dark:text-slate-300 font-medium cursor-pointer">Package:</label>
           <input
+            id="packageName"
+            name="packageName"
             type="text"
             value={config.packageName}
             onChange={(e) => update('packageName', e.target.value)}
             placeholder="com.example.dto"
+            aria-label="Package Name"
             className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-36 focus:ring-0 placeholder:text-slate-400"
           />
         </div>
