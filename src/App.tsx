@@ -34,16 +34,41 @@ const SAMPLE_JSON = `{
 export const App: React.FC = () => {
   const [rawJson, setRawJson] = useState<string>(SAMPLE_JSON);
   const [debouncedJson, setDebouncedJson] = useState<string>(SAMPLE_JSON);
-  const [config, setConfig] = useState<ConverterConfig>({
-    rootClassName: 'CustomerProfile',
-    packageName: 'com.example.dto',
-    dtoType: 'CLASS',
-    useLombok: false,
-    useLombokBuilder: false,
-    useJsonProperty: false,
-    useJakartaValidation: false,
-    detectIsoDates: true,
+  const [config, setConfig] = useState<ConverterConfig>(() => {
+    let savedPackageName = 'com.example.dto';
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem('package-name');
+        if (stored !== null) {
+          savedPackageName = stored;
+        }
+      } catch (e) {
+        console.warn('Failed to read package-name from localStorage', e);
+      }
+    }
+
+    return {
+      rootClassName: 'CustomerProfile',
+      packageName: savedPackageName,
+      dtoType: 'CLASS',
+      useLombok: false,
+      useLombokBuilder: false,
+      useJsonProperty: false,
+      useJakartaValidation: false,
+      detectIsoDates: true,
+    };
   });
+
+  // Persist packageName to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('package-name', config.packageName);
+      } catch (e) {
+        console.warn('Failed to save package-name to localStorage', e);
+      }
+    }
+  }, [config.packageName]);
 
   const [copied, setCopied] = useState<boolean>(false);
   const [errorFeedback, setErrorFeedback] = useState<string | null>(null);
