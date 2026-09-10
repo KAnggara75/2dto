@@ -35,7 +35,7 @@ Repository `2dto` adalah web application statis (SPA) berbasis React 19 + TypeSc
 - **Responsibility**: Komponen antarmuka pengguna (UI) editor, toolbar opsi konfigurasi, dan area interaktif editor.
 - **Entry / Key Files**:
   - [`src/components/ConfigToolbar.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/ConfigToolbar.tsx) — Bar navigasi & konfigurasi atas: tautan repositori GitHub di sisi paling kiri, pilihan target DTO (Java Class vs Record), input nama class dan package, checklist `@JsonProperty`, ISO dates, Jakarta validation, Lombok, serta tombol siklus tema (`light` -> `dark` -> `system`) di pojok kanan atas.
-  - [`src/components/EditorWorkspace.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/EditorWorkspace.tsx) — Dual-pane Monaco editor adaptif (kiri: input JSON dengan status indikator valid/empty/invalid dan draggable separator max 50%; kanan: output Java DTO dengan file tabs dan tombol aksi Load Sample, Copy Code, dan Download; tema editor berganti otomatis antara `vs` dan `vs-dark`).
+  - [`src/components/EditorWorkspace.tsx`](file:///Users/i/work/KAnggara75/2dto/src/components/EditorWorkspace.tsx) — Dual-pane Monaco editor adaptif (kiri: input JSON dengan status indikator valid/empty/invalid dan draggable separator max 50%; kanan: output Java DTO dengan file tabs dan tombol aksi Load Sample, Copy Code, dan Download; tema output Java menggunakan custom One Dark dengan pemetaan warna khusus: ungu untuk modifier, kuning untuk tipe data, hijau untuk `List`/`Map`, dan merah untuk variabel; tema editor beralih otomatis antara `vs` dan `one-dark`/`vs-dark`).
 - **Dependencies**: `@monaco-editor/react`, `lucide-react`, `tailwindcss`.
 - **Consumers**: [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx).
 
@@ -44,7 +44,7 @@ Repository `2dto` adalah web application statis (SPA) berbasis React 19 + TypeSc
 ### `src/` (Root App)
 - **Responsibility**: State management aplikasi, sinkronisasi tema, dan bootstrap React.
 - **Entry / Key Files**:
-  - [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx) — State utama (`rawJson`, `debouncedJson`, `config`, `errorFeedback`, `themeMode`), deteksi preferensi tema OS via `prefers-color-scheme`, copy & download handlers.
+  - [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx) — State utama (`rawJson`, `debouncedJson`, `config`, `errorFeedback`, `themeMode`), struktur semantik HTML accessibility (`<header role="banner">` dan `<main role="main">`), deteksi preferensi tema OS via `prefers-color-scheme`, copy & download handlers.
   - [`src/main.tsx`](file:///Users/i/work/KAnggara75/2dto/src/main.tsx) — React 19 DOM root mounting.
   - [`src/index.css`](file:///Users/i/work/KAnggara75/2dto/src/index.css) — Tailwind CSS v4 entry point dengan `@custom-variant dark`.
   - [`src/vite-env.d.ts`](file:///Users/i/work/KAnggara75/2dto/src/vite-env.d.ts) — Deklarasi tipe module CSS untuk TypeScript compiler.

@@ -39,7 +39,15 @@ graph TD
    - **Lombok Check**: Jika diaktifkan, kelas menggunakan anotasi `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`, dan opsional `@Builder`.
    - **JsonProperty Check**: Jika diaktifkan, menyematkan anotasi `@JsonProperty("key")` pada field.
    - **Jakarta Validation Check**: Jika diaktifkan, menambahkan `@NotNull` dan `@Valid` (pada sub-objek).
-7. **Rendering**: String kode Java valid dirender pada panel Monaco Editor sebelah kanan (read-only mode).
+7. **Rendering & Syntax Highlighting**:
+   - String kode Java dirender pada panel Monaco Editor sebelah kanan (read-only mode).
+   - Saat dark mode aktif, panel output Java menerapkan custom theme **One Dark** yang diperkaya via custom Monarch tokenizer (`monaco.languages.setMonarchTokensProvider`):
+     - Modifiers (`private`, `public`, `class`, dsb.): **ungu** (`#c678dd`)
+     - Collections (`List`, `Map`): **hijau** (`#98c379`)
+     - Standard Types / Classes (`String`, `Long`, DTO classes, primitif): **kuning emas** (`#e5c07b`)
+     - Field / Variable Identifiers: **merah** (`#e06c75`)
+     - Delimiters & brackets: **abu-abu One Dark** (`#abb2bf`)
+   - Saat light mode aktif, editor beralih ke tema `vs`.
 
 ---
 

@@ -23,14 +23,14 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
   };
 
   return (
-    <div className="bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-300">
+    <div className="bg-white/95 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-700 dark:text-slate-300">
       <div className="flex flex-wrap items-center gap-4">
         {/* GitHub Link */}
         <a
           href="https://github.com/KAnggara75/2dto"
           target="_blank"
           rel="noreferrer"
-          className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-300 dark:hover:border-slate-700 transition"
+          className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-slate-300 dark:hover:border-slate-700 transition"
           aria-label="GitHub Repository"
           title="View on GitHub"
         >
@@ -51,7 +51,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
             className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
               config.dtoType === 'CLASS'
                 ? 'bg-indigo-600 text-white shadow'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             Java Class (POJO)
@@ -62,7 +62,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
             className={`px-2.5 py-1 rounded-md font-medium transition cursor-pointer ${
               config.dtoType === 'RECORD'
                 ? 'bg-indigo-600 text-white shadow'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                : 'text-slate-700 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
             }`}
           >
             Java 17+ Record
@@ -71,27 +71,27 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
 
         {/* Root Class Name */}
         <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
-          <Type className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-          <span className="text-slate-500 dark:text-slate-400">Class:</span>
+          <Type className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+          <span className="text-slate-700 dark:text-slate-300 font-medium">Class:</span>
           <input
             type="text"
             value={config.rootClassName}
             onChange={(e) => update('rootClassName', e.target.value)}
             placeholder="RootDto"
-            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-28 focus:ring-0"
+            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-28 focus:ring-0 placeholder:text-slate-400"
           />
         </div>
 
         {/* Package Name */}
         <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800">
-          <Package className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-          <span className="text-slate-500 dark:text-slate-400">Package:</span>
+          <Package className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+          <span className="text-slate-700 dark:text-slate-300 font-medium">Package:</span>
           <input
             type="text"
             value={config.packageName}
             onChange={(e) => update('packageName', e.target.value)}
             placeholder="com.example.dto"
-            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-36 focus:ring-0"
+            className="bg-transparent border-none outline-none text-slate-900 dark:text-white font-mono text-xs w-36 focus:ring-0 placeholder:text-slate-400"
           />
         </div>
       </div>
@@ -108,9 +108,9 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
           {config.useJsonProperty ? (
             <CheckSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           ) : (
-            <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <Square className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           )}
-          <span>@JsonProperty</span>
+          <span className="text-slate-700 dark:text-slate-300">@JsonProperty</span>
         </label>
 
         <label className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900 dark:hover:text-white transition select-none">
@@ -123,9 +123,9 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
           {config.detectIsoDates ? (
             <CheckSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           ) : (
-            <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <Square className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           )}
-          <span>ISO Dates (Instant / LocalDate)</span>
+          <span className="text-slate-700 dark:text-slate-300">ISO Dates (Instant / LocalDate)</span>
         </label>
 
         <label className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900 dark:hover:text-white transition select-none">
@@ -138,9 +138,9 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
           {config.useJakartaValidation ? (
             <CheckSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           ) : (
-            <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+            <Square className="w-4 h-4 text-slate-500 dark:text-slate-400" />
           )}
-          <span>Jakarta Validation (@NotNull, @Valid)</span>
+          <span className="text-slate-700 dark:text-slate-300">Jakarta Validation (@NotNull, @Valid)</span>
         </label>
 
         {config.dtoType === 'CLASS' && (
@@ -155,9 +155,9 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
               {config.useLombok ? (
                 <CheckSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
               ) : (
-                <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                <Square className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               )}
-              <span>Lombok (@Data)</span>
+              <span className="text-slate-700 dark:text-slate-300">Lombok (@Data)</span>
             </label>
 
             {config.useLombok && (
@@ -171,9 +171,9 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
                 {config.useLombokBuilder ? (
                   <CheckSquare className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 ) : (
-                  <Square className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <Square className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                 )}
-                <span>@Builder</span>
+                <span className="text-slate-700 dark:text-slate-300">@Builder</span>
               </label>
             )}
           </>
@@ -185,7 +185,7 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
             <button
               type="button"
               onClick={onCycleThemeMode}
-              className="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer flex items-center gap-1.5 shadow-2xs font-medium"
+              className="px-2.5 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 transition cursor-pointer flex items-center gap-1.5 shadow-2xs font-medium"
               title={`Current: ${
                 themeMode === 'light'
                   ? 'Light (Click for Dark)'
@@ -196,11 +196,11 @@ export const ConfigToolbar: React.FC<ConfigToolbarProps> = ({
               aria-label="Toggle theme mode"
             >
               {themeMode === 'light' ? (
-                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <Sun className="w-3.5 h-3.5 text-amber-600 dark:text-amber-500" />
               ) : themeMode === 'dark' ? (
                 <Moon className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
               ) : (
-                <Laptop className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                <Laptop className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
               )}
               <span className="text-[11px] capitalize">
                 {themeMode}

@@ -111,3 +111,48 @@
 - **Consequences**:
   - Positif: Tampilan nyaman di berbagai kondisi pencahayaan, transisi mulus mengikuti OS, kontrol ringkas 1 tombol hemat ruang, dan preferensi pengguna tersimpan persisten.
   - Negatif: Komponen UI Monaco dan Tailwind memerlukan styling kelas ganda (`dark:*`).
+
+---
+
+## ADR-010: Custom One Dark Syntax Highlighting Theme for Java Output Pane
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & `src/components/EditorWorkspace.tsx`
+- **Context**: Monaco Editor `vs-dark` bawaan menggunakan palet warna standar VS Code gelap dan secara default memperlakukan tipe kustom Java sebagai generic identifier. Developer menginginkan tema Atom One Dark autentik pada panel output dengan pewarnaan spesifik: keyword modifier (`private`, `public`) berwarna ungu, tipe/kelas (`String`, primitif) berwarna kuning emas, koleksi (`List`, `Map`) berwarna hijau, nama atribut/variabel (`code`) berwarna merah, dan titik koma abu-abu.
+- **Decision**:
+  - Mendaftarkan custom theme `'one-dark'` melalui API `monaco.editor.defineTheme` pada hook `beforeMount`.
+  - Mengonfigurasi custom declarative tokenizer `monaco.languages.setMonarchTokensProvider('java', ...)` untuk mengklasifikasikan `(List|Map)` sebagai `type.collection` (`#98c379`), PascalCase types `^[A-Z][\w$]*` sebagai `type` (`#e5c07b`), dan identifiers sebagai `variable` (`#e06c75`).
+  - Menerapkan tema `'one-dark'` pada panel output Java saat dark mode aktif dan `'vs'` saat light mode aktif.
+- **Consequences**:
+  - Positif: Tampilan kode Java DTO memiliki kontras tinggi, estetika One Dark yang konsisten, serta diferensiasi visual yang jelas antara koleksi, tipe data, dan atribut.
+  - Negatif: Memerlukan definisi Monarch token provider kustom untuk Java di dalam bundle frontend.
+
+---
+
+## ADR-011: Semantic HTML Landmarks for Accessibility Navigation
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Accessibility audit & `src/App.tsx`
+- **Context**: Audit aksesibilitas (axe-core / Lighthouse) mengidentifikasi bahwa dokumen tidak memiliki `main` landmark (`Document does not have a main landmark`), menyulitkan pengguna screen reader menavigasi struktur halaman web.
+- **Decision**:
+  - Membungkus toolbar atas (`<ConfigToolbar />`) menggunakan elemen semantik `<header role="banner">`.
+  - Membungkus ruang kerja editor (`<EditorWorkspace />`) menggunakan elemen semantik `<main role="main">` dengan kelas layout responsif `flex-1 min-h-0 flex flex-col overflow-hidden`.
+- **Consequences**:
+  - Positif: Lolos audit aksesibilitas landmark, memudahkan navigasi teknologi asistif, dan mempertahankan flexbox full-height layout secara utuh.
+  - Negatif: Tidak ada dampak negatif.
+
+---
+
+## ADR-012: WCAG 2.1 AA Color Contrast Enhancements in Light Mode
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Accessibility audit & `src/components/ConfigToolbar.tsx`, `src/components/EditorWorkspace.tsx`
+- **Context**: Pada mode terang (Light Mode), beberapa teks pendukung dan label (seperti label checkbox, placeholder input, badge counter, teks status) menggunakan warna abu-abu terlalu terang (`text-slate-400`, `text-slate-500`) yang menghasilkan rasio kontras di bawah ambang batas WCAG AA (< 4.5:1).
+- **Decision**:
+  - Mengganti teks label opsi konfigurasi menjadi `text-slate-700` (~7.5:1 contrast ratio) dan label input Class/Package menjadi `text-slate-700 font-medium`.
+  - Meningkatkan teks status dan sub-keterangan editor menjadi `text-slate-600` dan judul editor menjadi `text-slate-800`.
+  - Mempertegas warna ikon checkbox dan border status tombol disabled (`border-slate-300`).
+  - Menyesuaikan badge *Separate Files* menjadi `text-indigo-800 border-indigo-300` pada latar `bg-indigo-50`.
+- **Consequences**:
+  - Positif: Teks dan kontrol UI sangat mudah dibaca pada berbagai tingkat pencahayaan layar dan memenuhi standar kepatuhan aksesibilitas WCAG 2.1 AA.
+  - Negatif: Warna sedikit lebih gelap dibanding palet pastel awal, namun tetap selaras dengan desain keseluruhan.

@@ -200,27 +200,31 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-100 text-slate-800 dark:bg-slate-950 dark:text-slate-100 overflow-hidden font-sans">
-      <ConfigToolbar
-        config={config}
-        onChange={setConfig}
-        themeMode={themeMode}
-        onCycleThemeMode={handleCycleThemeMode}
-      />
-      <EditorWorkspace
-        rawJson={rawJson}
-        onJsonChange={(val) => setRawJson(val ?? '')}
-        files={files}
-        generatedCode={generatedCode}
-        errorFeedback={errorFeedback}
-        activeFileIndex={activeFileIndex}
-        onSelectFileIndex={setActiveFileIndex}
-        onLoadSample={handleLoadSample}
-        onCopy={handleCopy}
-        onDownload={handleDownload}
-        copied={copied}
-        hasOutput={Boolean(generatedCode || files.length > 0)}
-        isDark={isDark}
-      />
+      <header role="banner">
+        <ConfigToolbar
+          config={config}
+          onChange={setConfig}
+          themeMode={themeMode}
+          onCycleThemeMode={handleCycleThemeMode}
+        />
+      </header>
+      <main role="main" className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <EditorWorkspace
+          rawJson={rawJson}
+          onJsonChange={(val) => setRawJson(val ?? '')}
+          files={files}
+          generatedCode={generatedCode}
+          errorFeedback={errorFeedback}
+          activeFileIndex={activeFileIndex}
+          onSelectFileIndex={setActiveFileIndex}
+          onLoadSample={handleLoadSample}
+          onCopy={handleCopy}
+          onDownload={handleDownload}
+          copied={copied}
+          hasOutput={Boolean(generatedCode || files.length > 0)}
+          isDark={isDark}
+        />
+      </main>
     </div>
   );
 };

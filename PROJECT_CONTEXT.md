@@ -11,7 +11,7 @@
   - In-browser AST generator, lossless number parser, inferrer, sanitizer, dan generator kode Java.
   - Multi-file separation untuk sub-objek bersarang dengan tab bar interaktif.
   - Indikator status JSON real-time (hijau: valid, kuning: kosong, merah: invalid).
-  - Tema adaptif: mode Light, Dark, dan System dengan tombol siklus dan persistensi localStorage.
+  - Tema adaptif: mode Light, Dark, dan System dengan tombol siklus, persistensi localStorage, dan kustom tema One Dark pada panel output Java.
   - Export fitur: Copy to clipboard dan download individual `.java` atau `.zip` (multi-file).
   - Static hosting via GitHub Pages.
 - **Out of Boundary**:
@@ -47,3 +47,5 @@
 - **Base Path**: `/` (Root domain base).
 - **Runtime**: Browser modern berbasis Chromium, Firefox, atau WebKit/Safari dengan dukungan WebAssembly / ES2022.
 - **Package Manager & Toolchain**: Bun 1.4+ dan Vite 8.
+- **Accessibility & Compliance Standards**: WCAG 2.1 Level AA compliant contrast ratios ($\ge 4.5:1$), semantik ARIA landmarks (`<header role="banner">`, `<main role="main">`).
+
