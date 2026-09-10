@@ -19,7 +19,8 @@ export function generateJavaFiles(classes: ClassMetadata[], config: ConverterCon
 
 function generateSingleClassFile(cls: ClassMetadata, config: ConverterConfig): string {
   const imports = new Set<string>();
-  if (config.useJsonProperty && cls.fields.length > 0) {
+  const hasReservedField = cls.fields.some((f) => f.isReserved);
+  if ((config.useJsonProperty && cls.fields.length > 0) || hasReservedField) {
     imports.add('import com.fasterxml.jackson.annotation.JsonProperty;');
   }
 
@@ -100,7 +101,8 @@ function generateRecord(cls: ClassMetadata, isPublic: boolean, config: Converter
         lines.push('    @Valid');
       }
     }
-    if (config.useJsonProperty) {
+    const shouldAnnotateJson = config.useJsonProperty || field.isReserved;
+    if (shouldAnnotateJson) {
       lines.push(`    @JsonProperty("${field.originalKey}") ${field.javaType} ${field.sanitizedFieldName}`);
     } else {
       lines.push(`    ${field.javaType} ${field.sanitizedFieldName}`);
@@ -135,7 +137,8 @@ function generateClass(
           lines.push('    @Valid');
         }
       }
-      if (config.useJsonProperty) {
+      const shouldAnnotateJson = config.useJsonProperty || field.isReserved;
+      if (shouldAnnotateJson) {
         lines.push(`    @JsonProperty("${field.originalKey}")`);
       }
       lines.push(`    private ${field.javaType} ${field.sanitizedFieldName};`);
@@ -158,7 +161,8 @@ function generateClass(
         lines.push('    @Valid');
       }
     }
-    if (config.useJsonProperty) {
+    const shouldAnnotateJson = config.useJsonProperty || field.isReserved;
+    if (shouldAnnotateJson) {
       lines.push(`    @JsonProperty("${field.originalKey}")`);
     }
     lines.push(`    private ${field.javaType} ${field.sanitizedFieldName};`);
