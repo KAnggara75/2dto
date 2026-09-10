@@ -44,7 +44,7 @@ Repository `2dto` adalah web application statis (SPA) berbasis React 19 + TypeSc
 ### `src/` (Root App)
 - **Responsibility**: State management aplikasi, sinkronisasi tema, dan bootstrap React.
 - **Entry / Key Files**:
-  - [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx) — State utama (`rawJson`, `debouncedJson`, `config`, `errorFeedback`, `themeMode`), struktur semantik HTML accessibility (`<header role="banner">` dan `<main role="main">`), deteksi preferensi tema OS via `prefers-color-scheme`, copy & download handlers.
+  - [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx) — State utama (`rawJson`, `debouncedJson`, `config`, `errorFeedback`, `themeMode`), persistensi lokal browser (`localStorage` untuk `theme-mode` dan `package-name`), struktur semantik HTML accessibility (`<header role="banner">` dan `<main role="main">`), deteksi preferensi tema OS via `prefers-color-scheme`, copy & download handlers.
   - [`src/main.tsx`](file:///Users/i/work/KAnggara75/2dto/src/main.tsx) — React 19 DOM root mounting.
   - [`src/index.css`](file:///Users/i/work/KAnggara75/2dto/src/index.css) — Tailwind CSS v4 entry point dengan `@custom-variant dark`.
   - [`src/vite-env.d.ts`](file:///Users/i/work/KAnggara75/2dto/src/vite-env.d.ts) — Deklarasi tipe module CSS untuk TypeScript compiler.
