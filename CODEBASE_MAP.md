@@ -14,7 +14,7 @@ Repository `2dto` adalah web application statis (SPA) berbasis React 19 + TypeSc
   - [`src/lib/converter/types.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/types.ts) — Definisi tipe AST (`ClassMetadata`, `FieldMetadata`, `ConverterConfig`, `DtoTargetType`).
   - [`src/lib/converter/inferrer.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/inferrer.ts) — Mesin inferensi tipe (Integer, Long, Double, ISO Instant/LocalDate, generic list, rekursif object).
   - [`src/lib/converter/sanitizer.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/sanitizer.ts) — Penanganan Java reserved keywords (`class`, `default`, `import`, dsb.) dan penamaan PascalCase/camelCase.
-  - [`src/lib/converter/generator.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/generator.ts) — Serializer AST menjadi teks Java: Standard POJO Class (Constructor, Getter, Setter), Java 17+ Record, dan Lombok Class.
+  - [`src/lib/converter/generator.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/generator.ts) — Serializer AST menjadi teks Java: Standard POJO Class (Constructor, Getter, Setter), Java 17+ Record, dan Lombok Class (termasuk pemaksaan anotasi `@JsonProperty` dan Jackson import untuk Java reserved keywords saat opsi global dimatikan).
   - [`src/lib/converter/converter.test.ts`](file:///Users/i/work/KAnggara75/2dto/src/lib/converter/converter.test.ts) — Unit test suite untuk pengujian inferensi dan generator.
 - **Dependencies**: `lossless-json`, `bun:test` (saat testing).
 - **Consumers**: [`src/App.tsx`](file:///Users/i/work/KAnggara75/2dto/src/App.tsx).

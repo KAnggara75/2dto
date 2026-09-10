@@ -37,7 +37,7 @@ graph TD
    - **Mode CLASS**: Menghasilkan Java Class POJO lengkap dengan private fields, constructor tanpa argumen, constructor semua argumen, dan getter/setter.
    - **Mode RECORD**: Menghasilkan Java 17 canonical record parameters.
    - **Lombok Check**: Jika diaktifkan, kelas menggunakan anotasi `@Data`, `@NoArgsConstructor`, `@AllArgsConstructor`, dan opsional `@Builder`.
-   - **JsonProperty Check**: Jika diaktifkan, menyematkan anotasi `@JsonProperty("key")` pada field.
+   - **JsonProperty Check**: Jika diaktifkan, menyematkan anotasi `@JsonProperty("key")` pada seluruh field. Jika tidak diaktifkan, anotasi `@JsonProperty` tetap **dipaksa secara otomatis** pada field yang bentrok dengan kata kunci terlarang Java (misal: `class`, `default`, `import`, dsb.) beserta impor Jackson-nya untuk mencegah kegagalan deserialisasi.
    - **Jakarta Validation Check**: Jika diaktifkan, menambahkan `@NotNull` dan `@Valid` (pada sub-objek).
 7. **Rendering & Syntax Highlighting**:
    - String kode Java dirender pada panel Monaco Editor sebelah kanan (read-only mode).
