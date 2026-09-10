@@ -69,13 +69,14 @@ export class TypeInferrer {
     this.classOrder.push(uniqueClassName);
 
     for (const [key, value] of Object.entries(obj)) {
-      const { name: sanitizedFieldName, needsAnnotation } = sanitizeFieldName(key);
+      const { name: sanitizedFieldName, needsAnnotation, isReserved } = sanitizeFieldName(key);
       const fieldInfo = this.inferField(sanitizedFieldName, value, uniqueClassName);
       fields.push({
         originalKey: key,
         sanitizedFieldName,
         ...fieldInfo,
         needsAnnotation: needsAnnotation || fieldInfo.needsAnnotation,
+        isReserved,
       });
     }
 

@@ -19,6 +19,7 @@ export interface FieldMetadata {
   nestedClassName?: string;
   isCollection: boolean;
   needsAnnotation: boolean;
+  isReserved?: boolean;
 }
 
 export interface ClassMetadata {

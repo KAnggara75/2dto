@@ -31,11 +31,16 @@ export function toCamelCase(str: string): string {
   return pascal.charAt(0).toLowerCase() + pascal.slice(1);
 }
 
-export function sanitizeFieldName(key: string): { name: string; needsAnnotation: boolean } {
+export function isReservedKeyword(word: string): boolean {
+  return JAVA_RESERVED.has(word);
+}
+
+export function sanitizeFieldName(key: string): { name: string; needsAnnotation: boolean; isReserved: boolean } {
   let camel = toCamelCase(key);
+  let isReserved = JAVA_RESERVED.has(camel);
   let needsAnnotation = camel !== key;
 
-  if (JAVA_RESERVED.has(camel)) {
+  if (isReserved) {
     camel = `${camel}Val`;
     needsAnnotation = true;
   }
@@ -46,5 +51,5 @@ export function sanitizeFieldName(key: string): { name: string; needsAnnotation:
     needsAnnotation = true;
   }
 
-  return { name: camel, needsAnnotation };
+  return { name: camel, needsAnnotation, isReserved };
 }
