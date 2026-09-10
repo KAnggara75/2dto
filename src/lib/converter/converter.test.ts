@@ -114,6 +114,48 @@ describe('convertJsonToDto', () => {
     expect(result.code).toContain('private Integer score;');
   });
 
+  it('should force @JsonProperty and Jackson import on reserved keywords even when useJsonProperty is false', () => {
+    const json = JSON.stringify({
+      user_name: 'alice',
+      class: 'VIP',
+      default: true,
+    });
+
+    const noJsonPropertyConfig: ConverterConfig = {
+      ...defaultConfig,
+      dtoType: 'CLASS',
+      useJsonProperty: false,
+    };
+
+    const result = convertJsonToDto(json, noJsonPropertyConfig);
+    expect(result.code).toContain('import com.fasterxml.jackson.annotation.JsonProperty;');
+    // Non-reserved key should not have @JsonProperty
+    expect(result.code).not.toContain('@JsonProperty("user_name")');
+    expect(result.code).toContain('private String userName;');
+    // Reserved keys MUST have @JsonProperty
+    expect(result.code).toContain('@JsonProperty("class")\n    private String classVal;');
+    expect(result.code).toContain('@JsonProperty("default")\n    private Boolean defaultVal;');
+  });
+
+  it('should force @JsonProperty on reserved keywords in RECORD mode when useJsonProperty is false', () => {
+    const json = JSON.stringify({
+      id: 1,
+      class: 'GOLD',
+    });
+
+    const recordConfig: ConverterConfig = {
+      ...defaultConfig,
+      dtoType: 'RECORD',
+      useJsonProperty: false,
+    };
+
+    const result = convertJsonToDto(json, recordConfig);
+    expect(result.code).toContain('import com.fasterxml.jackson.annotation.JsonProperty;');
+    expect(result.code).not.toContain('@JsonProperty("id")');
+    expect(result.code).toContain('Integer id');
+    expect(result.code).toContain('@JsonProperty("class") String classVal');
+  });
+
   it('should generate multiple separate files for nested objects (1 class per file)', () => {
     const json = JSON.stringify({
       order_id: 101,
