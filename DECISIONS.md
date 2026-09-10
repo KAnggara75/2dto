@@ -202,3 +202,17 @@
 - **Consequences**:
   - Positif: Tampilan antarmuka dark mode menjadi elegan dan konsisten, serta tidak ada kedipan atau geseran elemen checkbox saat pengguna mengganti mode tema.
   - Negatif: Diperlukan nilai warna CSS custom class (`[#222222]`, `[#1e1e1e]`, `[#333333]`) untuk menimpa palet default Tailwind slate.
+
+---
+
+## ADR-016: Browser Storage Persistence for Package Name
+- **Status**: Accepted
+- **Date**: 2026-09-10
+- **Source**: Developer request & `src/App.tsx`
+- **Context**: Sebelumnya, nilai `packageName` kembali ke nilai awal `'com.example.dto'` setiap kali halaman web di-refresh, mengharuskan developer mengetikkan ulang nama package organisasi/proyek mereka berulang kali.
+- **Decision**:
+  - Menginisialisasi `config.packageName` secara lazy melalui pembacaan `localStorage.getItem('package-name')` dengan fallback default `'com.example.dto'`.
+  - Menyinkronkan setiap perubahan `config.packageName` ke `localStorage.setItem('package-name', ...)` di dalam `useEffect` dengan pembungkus proteksi `try/catch` untuk menangani storage quota atau mode penjelajahan privat (incognito).
+- **Consequences**:
+  - Positif: Meningkatkan kenyamanan alur kerja developer secara signifikan (nama package tetap tersimpan saat reload halaman atau membuka sesi baru).
+  - Negatif: Tidak ada dampak negatif. Nilai disimpan di storage lokal browser pengguna tanpa sinkronisasi jaringan (tetap 100% private).
